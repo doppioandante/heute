@@ -2,6 +2,7 @@
   "manifest_version": 2,
   "name": "Heute",
   "version": "1.0",
+  "author": "Enrico Lumetti",
 
   "description": "Stop procrastination by setting time limits on browsing.",
 
@@ -15,8 +16,7 @@
     "alarms"
   ],
   "options_ui": {
-    "page": "options.html",
-    "browser_style": true
+    "page": "options.html"
   },
   "content_scripts": [
     {
