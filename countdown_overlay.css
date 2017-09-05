@@ -1,0 +1,18 @@
+div.heute_clock {
+  position: fixed;
+  bottom: 5px;
+  left: 13px;
+  background-color: greenyellow;
+  padding: 4px 12px;
+  border-radius: 12px;
+  opacity: .7;
+}
+
+div.heute_clock p {
+    margin: 0px;
+    font-family: arial,sans-serif;
+    font-size: medium;
+    line-height: 1;
+}
+
+
