@@ -3,6 +3,7 @@ let remainingMinutes = 0;
 let csClockPort = undefined;
 const resetAlarmName = "reset-heute";
 const decreaseCounterName = "decrease-counter";
+const defaultRemainingMinutes = defaultRemainingMinutes;
 
 function redirect(requestDetails) {
   if (timeRunOut) {
@@ -19,7 +20,7 @@ browser.alarms.onAlarm.addListener(alarmInfo => {
     let getProp = browser.storage.local.get("userSettings");
     getProp.then(obj => {
       let userSettings = obj.userSettings;
-      userSettings.remainingMinutes = 120;
+      userSettings.remainingMinutes = defaultRemainingMinutes;
       browser.storage.local.set(userSettings);
       remainingMinutes = userSettings.remainingMinutes;
 
@@ -70,7 +71,7 @@ getProp
     // check for first time initialization
     if (!obj.hasOwnProperty("userSettings")) {
       userSettings.resetHour = 8; // 8 AM
-      userSettings.remainingMinutes = 120; // 2 hours minutes
+      userSettings.remainingMinutes = defaultRemainingMinutes; // 3 hours in minutes
 
       browser.storage.local.set({userSettings})
     } else {
