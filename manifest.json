@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Heute",
-  "version": "1.0",
+  "version": "1.0.1",
   "author": "Enrico Lumetti",
 
   "description": "Stop procrastination by setting time limits on browsing.",

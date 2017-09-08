@@ -1,9 +1,11 @@
+const defaultRemainingMinutes = 150;
+const defaultResetHour = 8;
+
 let timeRunOut = false;
 let remainingMinutes = 0;
 let csClockPort = undefined;
 const resetAlarmName = "reset-heute";
 const decreaseCounterName = "decrease-counter";
-const defaultRemainingMinutes = defaultRemainingMinutes;
 
 function redirect(requestDetails) {
   if (timeRunOut) {
@@ -28,6 +30,7 @@ browser.alarms.onAlarm.addListener(alarmInfo => {
         periodInMinutes: 1
       });
     });
+    //TODO(doppioandante): check change of resetHour
 
     timeRunOut = false; // outside of then() so that in case of
                         // getProp failure browsing can go on
@@ -70,7 +73,7 @@ getProp
 
     // check for first time initialization
     if (!obj.hasOwnProperty("userSettings")) {
-      userSettings.resetHour = 8; // 8 AM
+      userSettings.resetHour = defaultResetHour; // 8 AM
       userSettings.remainingMinutes = defaultRemainingMinutes; // 3 hours in minutes
 
       browser.storage.local.set({userSettings})

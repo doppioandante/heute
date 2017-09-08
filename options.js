@@ -1,3 +1,6 @@
+const defaultRemainingMinutes = 150;
+const defaultResetHour = 8;
+
 function saveOptions(e) {
   e.preventDefault();
   browser.storage.local.set({
@@ -9,10 +12,9 @@ function saveOptions(e) {
 }
 
 function restoreOptions() {
-
   function setCurrentChoice(res) {
-    document.querySelector("#time").value = res.userSettings.remainingMinutes || 180;
-    document.querySelector("#hour").value = res.userSettings.resetHour || 8;
+    document.querySelector("#time").value = res.userSettings.remainingMinutes || defaultRemainingMinutes;
+    document.querySelector("#hour").value = res.userSettings.resetHour || defaultResetHour;
   }
 
   function onError(error) {
