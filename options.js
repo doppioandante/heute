@@ -4,14 +4,10 @@ const defaultResetHour = 8;
 function saveOptions(e) {
   e.preventDefault();
   browser.storage.local.get("userSettings").then(obj => {
-    let remainingMinutes = obj.userSettings.remainingMinutes;
-    browser.storage.local.set({
-      "userSettings": {
-        defaultRemainingMinutes: document.querySelector("#time").value,
-        resetHour: document.querySelector("#hour").value,
-        remainingMinutes: remainingMinutes
-      }
-    });
+    let userSettings = obj.userSettings;
+    userSettings.defaultRemainingMinutes = document.querySelector("#time").value;
+    userSettings.resetHour = document.querySelector("#hour").value;
+    browser.storage.local.set({userSettings});
   });
 }
 

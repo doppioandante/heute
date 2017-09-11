@@ -17,13 +17,13 @@ function redirect(requestDetails) {
   return {};
 }
 
-browser.alarms.onAlarm.addListener(alarmInfo => {
-  if (alarmInfo.name === resetAlarmName) {
+function resetRemainingMinutes() {
     let getProp = browser.storage.local.get("userSettings");
     getProp.then(obj => {
       let userSettings = obj.userSettings;
       userSettings.remainingMinutes = userSettings.defaultRemainingMinutes;
-      browser.storage.local.set(userSettings);
+      userSettings.lastResetDate = new Date();
+      browser.storage.local.set({userSettings});
       remainingMinutes = userSettings.remainingMinutes;
 
       browser.alarms.create(decreaseCounterName, {
@@ -34,6 +34,11 @@ browser.alarms.onAlarm.addListener(alarmInfo => {
 
     timeRunOut = false; // outside of then() so that in case of
                         // getProp failure browsing can go on
+}
+
+browser.alarms.onAlarm.addListener(alarmInfo => {
+  if (alarmInfo.name === resetAlarmName) {
+    resetRemainingMinutes();
   }
   else if (alarmInfo.name === decreaseCounterName) {
     remainingMinutes -= 1;
@@ -76,8 +81,9 @@ getProp
       userSettings.resetHour = defaultResetHour;
       userSettings.defaultRemainingMinutes = defaultRemainingMinutes;
       userSettings.remainingMinutes = defaultRemainingMinutes;
+      userSettings.lastResetDate = new Date();
 
-      browser.storage.local.set({userSettings})
+      browser.storage.local.set({userSettings});
     } else {
       userSettings = obj.userSettings;
     }
@@ -86,6 +92,9 @@ getProp
 
     let resetHourDate = new Date();
     resetHourDate.setHours(userSettings.resetHour);
+    if (resetHourDate <= new Date() && new Date(userSettings.lastResetDate) <= resetHourDate) {
+      resetRemainingMinutes();
+    }
     const resetPeriod = 60 * 24; // one day in minutes
     browser.alarms.create(resetAlarmName, {
       when: resetHourDate.getTime(),
