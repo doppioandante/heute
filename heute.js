@@ -43,23 +43,18 @@ browser.alarms.onAlarm.addListener(alarmInfo => {
   else if (alarmInfo.name === decreaseCounterName) {
     remainingMinutes -= 1;
     csClockPort.postMessage(remainingMinutes);
+    browser.storage.local.get('userSettings').then(obj => {
+      let userSettings = obj.userSettings;
+      userSettings.remainingMinutes = remainingMinutes;
+      browser.storage.local.set({userSettings});
+    });
+
     if (remainingMinutes == 0) { //FIXME: don't allow negative values, corner case after restart with 0 saved?
       timeRunOut = true;
       browser.alarms.clear(decreaseCounterName);
     }
   }
 });
-
-browser.windows.onRemoved.addListener(_ => {
-  let getProp = browser.storage.local.get("userSettings");
-  getProp
-    .then(obj => {
-      let userSettings = obj.userSettings;
-      userSettings.remainingMinutes = remainingMinutes;
-      browser.storage.local.set({userSettings});
-    });
-});
-
 
 browser.runtime.onConnect.addListener(port => {
   csClockPort = port;
