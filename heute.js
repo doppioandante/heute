@@ -22,7 +22,7 @@ browser.alarms.onAlarm.addListener(alarmInfo => {
     let getProp = browser.storage.local.get("userSettings");
     getProp.then(obj => {
       let userSettings = obj.userSettings;
-      userSettings.remainingMinutes = defaultRemainingMinutes;
+      userSettings.remainingMinutes = userSettings.defaultRemainingMinutes;
       browser.storage.local.set(userSettings);
       remainingMinutes = userSettings.remainingMinutes;
 
@@ -73,12 +73,13 @@ getProp
 
     // check for first time initialization
     if (!obj.hasOwnProperty("userSettings")) {
-      userSettings.resetHour = defaultResetHour; // 8 AM
-      userSettings.remainingMinutes = defaultRemainingMinutes; // 3 hours in minutes
+      userSettings.resetHour = defaultResetHour;
+      userSettings.defaultRemainingMinutes = defaultRemainingMinutes;
+      userSettings.remainingMinutes = defaultRemainingMinutes;
 
       browser.storage.local.set({userSettings})
     } else {
-        userSettings = obj.userSettings;
+      userSettings = obj.userSettings;
     }
 
     remainingMinutes = userSettings.remainingMinutes;
