@@ -25,10 +25,6 @@ function resetRemainingMinutes() {
       userSettings.lastResetDate = new Date();
       browser.storage.local.set({userSettings});
       remainingMinutes = userSettings.remainingMinutes;
-
-      browser.alarms.create(decreaseCounterName, {
-        periodInMinutes: 1
-      });
     });
     //TODO(doppioandante): check change of resetHour
 
@@ -39,6 +35,9 @@ function resetRemainingMinutes() {
 browser.alarms.onAlarm.addListener(alarmInfo => {
   if (alarmInfo.name === resetAlarmName) {
     resetRemainingMinutes();
+    browser.alarms.create(decreaseCounterName, {
+      periodInMinutes: 1
+    });
   }
   else if (alarmInfo.name === decreaseCounterName) {
     remainingMinutes -= 1;
@@ -49,7 +48,7 @@ browser.alarms.onAlarm.addListener(alarmInfo => {
       browser.storage.local.set({userSettings});
     });
 
-    if (remainingMinutes == 0) { //FIXME: don't allow negative values, corner case after restart with 0 saved?
+    if (remainingMinutes == 0) {
       timeRunOut = true;
       browser.alarms.clear(decreaseCounterName);
     }
@@ -96,9 +95,11 @@ getProp
       periodInMinutes: resetPeriod
     });
 
-    browser.alarms.create(decreaseCounterName, {
-      periodInMinutes: 1
-    });
+    if (remainingMinutes != 0) {
+      browser.alarms.create(decreaseCounterName, {
+        periodInMinutes: 1
+      });
+    }
   })
   .catch(reason => {
     console.log("Error: " + reason);
