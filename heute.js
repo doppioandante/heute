@@ -71,16 +71,24 @@ getProp
     let userSettings = {};
 
     // check for first time initialization
-    if (!obj.hasOwnProperty("userSettings")) {
-      userSettings.resetHour = defaultResetHour;
-      userSettings.defaultRemainingMinutes = defaultRemainingMinutes;
-      userSettings.remainingMinutes = defaultRemainingMinutes;
-      userSettings.lastResetDate = new Date();
-
-      browser.storage.local.set({userSettings});
-    } else {
+    if (obj.hasOwnProperty('userSettings')) {
       userSettings = obj.userSettings;
     }
+
+    if (!userSettings.hasOwnProperty('resetHour')) {
+      userSettings.resetHour = defaultResetHour;
+    }
+    if (!userSettings.hasOwnProperty('defaultRemainingMinutes')) {
+      userSettings.defaultRemainingMinutes = defaultRemainingMinutes;
+    }
+    if (!userSettings.hasOwnProperty('remainingMinutes')) {
+      userSettings.remainingMinutes = defaultRemainingMinutes;
+    }
+    if (!userSettings.hasOwnProperty('lastResetDate')) {
+      userSettings.lastResetDate = new Date();
+    }
+
+    browser.storage.local.set({userSettings});
 
     remainingMinutes = userSettings.remainingMinutes;
 
