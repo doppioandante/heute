@@ -8,7 +8,7 @@ const resetAlarmName = "reset-heute";
 const decreaseCounterName = "decrease-counter";
 
 function redirect(requestDetails) {
-  if (timeRunOut) {
+  if (navigator.onLine && timeRunOut) {
     return {
       redirectUrl: browser.extension.getURL("landing.html")
     };
@@ -40,13 +40,15 @@ browser.alarms.onAlarm.addListener(alarmInfo => {
     });
   }
   else if (alarmInfo.name === decreaseCounterName) {
-    remainingMinutes -= 1;
-    csClockPort.postMessage(remainingMinutes);
-    browser.storage.local.get('userSettings').then(obj => {
-      let userSettings = obj.userSettings;
-      userSettings.remainingMinutes = remainingMinutes;
-      browser.storage.local.set({userSettings});
-    });
+    if (navigator.onLine) {
+      remainingMinutes -= 1;
+      csClockPort.postMessage(remainingMinutes);
+      browser.storage.local.get('userSettings').then(obj => {
+        let userSettings = obj.userSettings;
+        userSettings.remainingMinutes = remainingMinutes;
+        browser.storage.local.set({userSettings});
+      });
+    }
 
     if (remainingMinutes == 0) {
       timeRunOut = true;
